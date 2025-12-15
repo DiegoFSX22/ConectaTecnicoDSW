@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConectaTécnico — Central de Assistências Técnicas</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>ConectaTécnico</h1>
+<nav>
+  <a href="index.html">Início</a>
+
+  <a href="login.html" id="btnLogin">Login</a>
+  <a href="register.html" id="btnRegister">Registrar</a>
+
+  <a href="dashboard.html" id="btnDashboard" style="display:none;">Dashboard</a>
+  <a href="#" id="btnLogout" style="display:none;">Sair</a>
+</nav>
+
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h2>Encontre a assistência técnica ideal para o seu problema</h2>
+        <p>Conecte-se com profissionais qualificados em todo o Brasil.</p>
+        <a class="btn" href="list.html">Procurar assistências</a>
+      </div>
+    </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© ConectaTécnico — Central de Assistências Técnicas</p>
+    </div>
+  </footer>
+
+  <script>
+function atualizarMenu() {
+  const token = localStorage.getItem("token");
+
+  const nav = document.querySelector("nav");
+  if (!nav) return;
+
+  if (token) {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" id="logoutBtn">Sair</a>
+    `;
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("tipo");
+      window.location.href = "index.html";
+    };
+  } else {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="login.html">Entrar</a>
+      <a href="register.html">Cadastrar</a>
+    `;
+  }
+}
+
+atualizarMenu();
+</script>
+
+<script>
+const token = localStorage.getItem("token");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnDashboard = document.getElementById("btnDashboard");
+const btnLogout = document.getElementById("btnLogout");
+
+if (token) {
+  if (btnLogin) btnLogin.style.display = "none";
+  if (btnRegister) btnRegister.style.display = "none";
+  if (btnDashboard) btnDashboard.style.display = "inline-block";
+  if (btnLogout) btnLogout.style.display = "inline-block";
+}
+
+if (btnLogout) {
+  btnLogout.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
+}
+</script>
+
+</body>
+</html>

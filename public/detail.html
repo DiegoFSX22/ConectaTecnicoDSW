@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes — ConectaTécnico</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand"><a href="index.html">ConectaTécnico</a></h1>
+<nav>
+  <a href="index.html">Início</a>
+  <a href="list.html">Buscar</a>
+
+  <a href="login.html" id="btnLogin">Login</a>
+  <a href="register.html" id="btnRegister">Registrar</a>
+
+  <a href="dashboard.html" id="btnDashboard" style="display:none;">Dashboard</a>
+  <a href="#" id="btnLogout" style="display:none;">Sair</a>
+</nav>
+
+    </div>
+  </header>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© ConectaTécnico</p>
+    </div>
+  </footer>
+  <script>
+async function carregarDetalhes() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+
+    const res = await fetch(`/api/assistances/${id}`);
+    const dados = await res.json();
+
+    document.body.innerHTML += `
+      <main class="container">
+        <h1>${dados.nome}</h1>
+        <p><b>Categoria:</b> ${dados.categoria}</p>
+        <p><b>Endereço:</b> ${dados.endereco}</p>
+        <p><b>Contato:</b> ${dados.contato}</p>
+        <p>${dados.descricao}</p>
+        <a class="btn" href="https://wa.me/${dados.contato}">WhatsApp</a>
+      </main>
+    `;
+}
+
+carregarDetalhes();
+</script>
+
+<script>
+function atualizarMenu() {
+  const token = localStorage.getItem("token");
+
+  const nav = document.querySelector("nav");
+  if (!nav) return;
+
+  if (token) {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="list.html">Buscar</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" id="logoutBtn">Sair</a>
+    `;
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("tipo");
+      window.location.href = "index.html";
+    };
+  } else {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="login.html">Entrar</a>
+      <a href="register.html">Cadastrar</a>
+    `;
+  }
+}
+
+atualizarMenu();
+</script>
+
+<script>
+const token = localStorage.getItem("token");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnDashboard = document.getElementById("btnDashboard");
+const btnLogout = document.getElementById("btnLogout");
+
+if (token) {
+  if (btnLogin) btnLogin.style.display = "none";
+  if (btnRegister) btnRegister.style.display = "none";
+  if (btnDashboard) btnDashboard.style.display = "inline-block";
+  if (btnLogout) btnLogout.style.display = "inline-block";
+}
+
+if (btnLogout) {
+  btnLogout.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
+}
+</script>
+
+</body>
+</html>

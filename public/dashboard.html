@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — ConectaTécnico</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand"><a href="index.html">ConectaTécnico</a></h1>
+<nav>
+  <a href="index.html">Início</a>
+  <a href="list.html">Buscar</a>
+
+  <a href="login.html" id="btnLogin">Login</a>
+  <a href="register.html" id="btnRegister">Registrar</a>
+
+  <a href="dashboard.html" id="btnDashboard" style="display:none;">Dashboard</a>
+  <a href="#" id="btnLogout" style="display:none;">Sair</a>
+</nav>
+
+    </div>
+  </header>
+
+  <main class="container dashboard-page">
+    <section class="content">
+
+      <h2>Assistências cadastradas</h2>
+
+      <div class="card-grid"></div>
+
+<section class="new-assist">
+
+  <button id="btnNova" class="btn">➕ Nova Assistência</button>
+
+  <form id="newAssistForm" style="display:none; margin-top:20px;">
+    <h3>Nova Assistência</h3>
+
+
+          <label for="aname">Nome da assistência</label>
+          <input id="aname" name="aname" type="text" required>
+
+<label for="category">Categoria</label>
+<select id="category" name="category" required>
+  <option value="">Selecione uma categoria</option>
+    <option value="Informática">Informática</option>
+    <option value="Celular">Celular</option>
+    <option value="Eletrodomésticos">Eletrodomésticos</option>
+</select>
+
+
+          <label for="address">Endereço</label>
+          <input id="address" name="address" type="text" required>
+
+          <label for="city">Cidade</label>
+          <input id="city" name="city" type="text" required>
+
+          <label for="contact">Contato (WhatsApp)</label>
+          <input id="contact" name="contact" type="text" required>
+
+          <label for="desc">Descrição</label>
+          <textarea id="desc" name="desc" required></textarea>
+
+          <button type="submit">Cadastrar</button>
+        </form>
+
+      </section>
+    </section>
+  </main>
+
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+  alert("Você precisa estar logado!");
+  window.location.href = "login.html";
+}
+
+// Carregar assistências do técnico
+async function carregarAssistencias() {
+  const res = await fetch("/api/assistances", {
+    headers: { "Authorization": "Bearer " + token }
+  });
+
+  let lista = await res.json();
+
+  // só assistências DO TÉCNICO
+const user = JSON.parse(localStorage.getItem("user"));
+lista = lista.filter(a => a.usuario_id === user.id);
+
+  const grid = document.querySelector(".card-grid");
+  grid.innerHTML = "";
+
+  lista.forEach(a => {
+    grid.innerHTML += `
+      <div class="card">
+        <h3>${a.nome}</h3>
+        <p>${a.categoria} — ${a.cidade}</p>
+        <div class="card-actions">
+          <a href="detail.html?id=${a.id}">Ver</a>
+          <button onclick="excluir(${a.id})">Excluir</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Excluir assistência
+async function excluir(id) {
+  if (!confirm("Tem certeza que deseja excluir?")) return;
+
+  const res = await fetch(`/api/assistances/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": "Bearer " + token }
+  });
+
+  const r = await res.json();
+  alert(r.message || r.error);
+  carregarAssistencias();
+}
+
+// Criar nova assistência
+document.getElementById("newAssistForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const data = {
+    nome: document.getElementById("aname").value,
+    categoria: document.getElementById("category").value,
+    endereco: document.getElementById("address").value,
+    cidade: document.getElementById("city").value,
+    contato: document.getElementById("contact").value,
+    descricao: document.getElementById("desc").value
+  };
+
+  const res = await fetch("/api/assistances", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify(data)
+  });
+
+  const r = await res.json();
+  alert(r.message || r.error);
+
+if (res.ok) {
+  carregarAssistencias();
+  form.reset();
+  form.style.display = "none";
+}
+
+});
+
+carregarAssistencias();
+</script>
+
+<script>
+function atualizarMenu() {
+  const token = localStorage.getItem("token");
+
+  const nav = document.querySelector("nav");
+  if (!nav) return;
+
+  if (token) {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="list.html">Buscar</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" id="logoutBtn">Sair</a>
+    `;
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("tipo");
+      window.location.href = "index.html";
+    };
+  } else {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="login.html">Entrar</a>
+      <a href="register.html">Cadastrar</a>
+    `;
+  }
+}
+
+atualizarMenu();
+
+const btnNova = document.getElementById("btnNova");
+const form = document.getElementById("newAssistForm");
+
+btnNova.addEventListener("click", () => {
+  form.style.display = form.style.display === "none" ? "block" : "none";
+});
+
+</script>
+
+<script>
+const token = localStorage.getItem("token");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnDashboard = document.getElementById("btnDashboard");
+const btnLogout = document.getElementById("btnLogout");
+
+if (token) {
+  if (btnLogin) btnLogin.style.display = "none";
+  if (btnRegister) btnRegister.style.display = "none";
+  if (btnDashboard) btnDashboard.style.display = "inline-block";
+  if (btnLogout) btnLogout.style.display = "inline-block";
+}
+
+if (btnLogout) {
+  btnLogout.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
+}
+</script>
+
+</body>
+</html>

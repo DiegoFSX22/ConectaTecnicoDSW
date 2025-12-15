@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login — ConectaTécnico</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand"><a href="index.html">ConectaTécnico</a></h1>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="register.html">Registrar</a>
+      </nav>
+    </div> 
+  </header>
+
+  <main class="container login-page">
+    <section class="login-form">
+      <h2>Entrar na sua conta</h2>
+
+      <!-- APENAS 1 FORMULÁRIO -->
+      <form id="loginForm">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" name="email" required>
+
+        <label for="password">Senha</label>
+        <input id="password" type="password" name="password" required>
+
+        <button type="submit">Entrar</button>
+      </form>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© ConectaTécnico — Central de Assistências Técnicas</p>
+    </div>
+  </footer>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const data = {
+    email: document.getElementById("email").value,
+    senha: document.getElementById("password").value
+  };
+
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+
+  if (res.ok) {
+    // SALVA TOKEN E USUÁRIO CORRETAMENTE
+    localStorage.setItem("token", result.token);
+    localStorage.setItem("user", JSON.stringify(result.user));
+    localStorage.setItem("tipo", result.user.tipo);
+
+    window.location.href = "dashboard.html";
+  } else {
+    alert(result.error);
+  }
+});
+</script>
+
+<script>
+function atualizarMenu() {
+  const token = localStorage.getItem("token");
+
+  const nav = document.querySelector("nav");
+  if (!nav) return;
+
+  if (token) {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="list.html">Buscar</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" id="logoutBtn">Sair</a>
+    `;
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("tipo");
+      window.location.href = "index.html";
+    };
+  } else {
+    nav.innerHTML = `
+      <a href="index.html">Início</a>
+      <a href="login.html">Entrar</a>
+      <a href="register.html">Cadastrar</a>
+    `;
+  }
+}
+
+atualizarMenu();
+</script>
+
+</body>
+</html>

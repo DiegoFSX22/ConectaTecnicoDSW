@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Assistências — ConectaTécnico</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="index.html">ConectaTécnico</a></h1>
+<nav>
+  <a href="index.html">Início</a>
+
+  <a href="login.html" id="btnLogin">Login</a>
+  <a href="register.html" id="btnRegister">Registrar</a>
+
+  <a href="dashboard.html" id="btnDashboard" style="display:none;">Dashboard</a>
+  <a href="#" id="btnLogout" style="display:none;">Sair</a>
+</nav>
+
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="filters">
+      <h2>Buscar Assistências</h2>
+<form id="searchForm">
+  <input name="q" placeholder="Nome da assistência">
+
+  <select name="categoria">
+    <option value="">Todas as categorias</option>
+    <option value="Informática">Informática</option>
+    <option value="Celular">Celular</option>
+    <option value="Eletrodomésticos">Eletrodomésticos</option>
+  </select>
+
+  <button type="submit">Buscar</button>
+</form>
+
+
+    </section>
+
+    <section class="results">
+      <h2>Resultados</h2>
+      <div class="card-grid">
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© ConectaTécnico — Central de Assistências Técnicas</p>
+    </div>
+  </footer>
+
+<script>
+async function carregarAssistencias(query = "") {
+  console.log("Buscando:", "/api/assistances" + query);
+
+  const res = await fetch("/api/assistances" + query);
+  const lista = await res.json();
+
+  console.log("Resultado:", lista);
+
+  const grid = document.querySelector(".card-grid");
+  grid.innerHTML = "";
+
+  if (!lista || lista.length === 0) {
+    grid.innerHTML = "<p>Nenhuma assistência encontrada.</p>";
+    return;
+  }
+
+  lista.forEach(a => {
+    grid.innerHTML += `
+      <div class="card">
+        <h3>${a.nome}</h3>
+        <p>${a.categoria}</p>
+        <p>${a.descricao || ""}</p>
+        <a class="btn" href="detail.html?id=${a.id}">Ver detalhes</a>
+      </div>
+    `;
+  });
+}
+
+// carregar todas ao abrir a página
+carregarAssistencias();
+
+// evento de busca
+document.getElementById("searchForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const q = document.querySelector("input[name='q']").value.trim();
+  const categoria = document.querySelector("select[name='categoria']").value;
+
+if (!q) {
+  document.querySelector(".card-grid").innerHTML =
+    "<p>Digite o nome da assistência para buscar.</p>";
+  return;
+}
+
+let query = `?q=${encodeURIComponent(q)}`;
+if (categoria) query += `&categoria=${encodeURIComponent(categoria)}`;
+
+carregarAssistencias(query);
+
+});
+</script>
+
+
+<script>
+const token = localStorage.getItem("token");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnDashboard = document.getElementById("btnDashboard");
+const btnLogout = document.getElementById("btnLogout");
+
+if (token) {
+  if (btnLogin) btnLogin.style.display = "none";
+  if (btnRegister) btnRegister.style.display = "none";
+  if (btnDashboard) btnDashboard.style.display = "inline-block";
+  if (btnLogout) btnLogout.style.display = "inline-block";
+}
+
+if (btnLogout) {
+  btnLogout.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
+}
+</script>
+
+</body>
+</html>

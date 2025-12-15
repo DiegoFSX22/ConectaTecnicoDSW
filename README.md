@@ -8,7 +8,7 @@ O sistema permite que técnicos criem contas, cadastrem suas assistências e que
 
 ## Autor
 - Nome: Diego Silva  
-- Matrícula: (preencha com sua matrícula)
+- Matrícula: 2020020050
 
 ---
 
@@ -58,15 +58,15 @@ Antes de executar o projeto, é necessário ter instalado:
 
 ## Estrutura do Projeto
 
-public/
-css/
-styles.css
-index.html
-login.html
-register.html
-dashboard.html
-list.html
-detail.html
+├── public/
+│   ├── css/
+│   │   └── styles.css
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   ├── list.html
+│   └── detail.html
 │
 ├── server.js
 ├── conectatecnico.db

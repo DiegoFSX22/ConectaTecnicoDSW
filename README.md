@@ -183,21 +183,21 @@ DELETE /api/assistances/:id — Excluir assistência
 
 ## Diagrama de Arquitetura
 
-┌─────────────────────┐
-│     Frontend        │
-│ HTML / CSS / JS     │
-│ (Browser)           │
-└─────────┬───────────┘
-          │ HTTP / JSON
-          ▼
-┌─────────────────────┐
-│     Backend         │
-│ Node.js + Express   │
-│ JWT / API REST      │
-└─────────┬───────────┘
-          │ SQL
-          ▼
-┌─────────────────────┐
-│   Banco de Dados    │
-│      SQLite         │
-└─────────────────────┘
+1.  ┌─────────────────────┐
+2.  │     Frontend        │
+3.  │ HTML / CSS / JS     │
+4.  │ (Browser)           │
+5.  └─────────┬───────────┘
+6.            │ HTTP / JSON
+7.            ▼
+9.  ┌─────────────────────┐
+9.  │     Backend         │
+10. │ Node.js + Express   │
+11. │ JWT / API REST      │
+12. └─────────┬───────────┘
+13.           │ SQL
+14.           ▼
+15. ┌─────────────────────┐
+16. │   Banco de Dados    │
+17. │      SQLite         │
+18. └─────────────────────┘

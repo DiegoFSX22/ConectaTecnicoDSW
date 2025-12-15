@@ -178,3 +178,26 @@ DELETE /api/assistances/:id — Excluir assistência
 3. Busca não retornava resultados: corrigido ao ajustar os parâmetros da query na API.
 
 4. Controle de permissões: implementado com middleware de autenticação no backend.
+
+---
+
+## Diagrama de Arquitetura
+
+┌─────────────────────┐
+│     Frontend        │
+│ HTML / CSS / JS     │
+│ (Browser)           │
+└─────────┬───────────┘
+          │ HTTP / JSON
+          ▼
+┌─────────────────────┐
+│     Backend         │
+│ Node.js + Express   │
+│ JWT / API REST      │
+└─────────┬───────────┘
+          │ SQL
+          ▼
+┌─────────────────────┐
+│   Banco de Dados    │
+│      SQLite         │
+└─────────────────────┘

@@ -188,8 +188,8 @@ DELETE /api/assistances/:id — Excluir assistência
 3.  │ HTML / CSS / JS     │
 4.  │ (Browser)           │
 5.  └─────────┬───────────┘
-6.            │ HTTP / JSON
-7.            ▼
+6.               │ HTTP / JSON
+7.               ▼
 9.  ┌─────────────────────┐
 9.  │     Backend         │
 10. │ Node.js + Express   │

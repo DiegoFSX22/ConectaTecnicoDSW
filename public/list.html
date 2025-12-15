@@ -85,10 +85,8 @@ async function carregarAssistencias(query = "") {
   });
 }
 
-// carregar todas ao abrir a página
 carregarAssistencias();
 
-// evento de busca
 document.getElementById("searchForm").addEventListener("submit", e => {
   e.preventDefault();
 

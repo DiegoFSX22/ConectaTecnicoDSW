@@ -1,6 +1,5 @@
 console.log("JS funcionando!");
 
-// server.js
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -28,7 +27,6 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// serve arquivos estáticos (coloque seus HTML/CSS/JS em /public)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // autenticação JWT middleware
@@ -47,10 +45,6 @@ function authenticateToken(req, res, next) {
 
 // --- ROTAS --- //
 
-/**
- * POST /api/register
- * body: { nome, email, senha, tipo } // tipo: 'tecnico' ou 'cliente'
- */
 app.post('/api/register', (req, res) => {
   const { nome, email, senha } = req.body;
 
@@ -87,10 +81,6 @@ app.post('/api/register', (req, res) => {
 });
 
 
-/**
- * POST /api/login
- * body: { email, senha }
- */
 app.post('/api/login', (req, res) => {
   const { email, senha } = req.body;
 
@@ -119,10 +109,7 @@ app.post('/api/login', (req, res) => {
 });
 
 
-/**
- * GET /api/assistances
- * query optional: q (nome), categoria, cidade
- */
+
 app.get('/api/assistances', (req, res) => {
   const { q, categoria, cidade } = req.query;
   let sql = `SELECT a.id, a.nome, a.categoria, a.endereco, a.cidade, a.contato, a.descricao, a.usuario_id
@@ -146,9 +133,6 @@ app.get('/api/assistances', (req, res) => {
   });
 });
 
-/**
- * GET /api/assistances/:id
- */
 app.get('/api/assistances/:id', (req, res) => {
   const id = req.params.id;
   db.get('SELECT * FROM assistencia WHERE id = ?', [id], (err, row) => {
@@ -158,12 +142,7 @@ app.get('/api/assistances/:id', (req, res) => {
   });
 });
 
-/**
- * POST /api/assistances
- * body: { nome, categoria, endereco, cidade, contato, descricao }
- * protected: apenas técnico
- * regra: cada técnico pode cadastrar no máximo 3 assistências
- */
+
 app.post('/api/assistances', authenticateToken, (req, res) => {
   const user = req.user;
 
@@ -172,7 +151,6 @@ app.post('/api/assistances', authenticateToken, (req, res) => {
     return res.status(400).json({ error: 'nome, categoria, endereco e contato são obrigatórios' });
   }
 
-  // conta quantas assistências o técnico já tem
   db.get('SELECT COUNT(*) AS cnt FROM assistencia WHERE usuario_id = ?', [user.id], (err, row) => {
     if (err) return res.status(500).json({ error: 'Erro no banco' });
     if (row.cnt >= 3) return res.status(400).json({ error: 'Limite de 3 assistências atingido' });
@@ -186,10 +164,7 @@ app.post('/api/assistances', authenticateToken, (req, res) => {
   });
 });
 
-/**
- * PUT /api/assistances/:id
- * protected: apenas dono (técnico) pode editar
- */
+
 app.put('/api/assistances/:id', authenticateToken, (req, res) => {
   const user = req.user;
   const id = req.params.id;
@@ -210,10 +185,7 @@ app.put('/api/assistances/:id', authenticateToken, (req, res) => {
   });
 });
 
-/**
- * DELETE /api/assistances/:id
- * protected: apenas dono
- */
+
 app.delete('/api/assistances/:id', authenticateToken, (req, res) => {
   const user = req.user;
   const id = req.params.id;
@@ -229,7 +201,6 @@ app.delete('/api/assistances/:id', authenticateToken, (req, res) => {
   });
 });
 
-// rota para obter perfil do usuário (token)
 app.get('/api/me', authenticateToken, (req, res) => {
   db.get('SELECT id, nome, email, tipo, data_cadastro FROM usuario WHERE id = ?', [req.user.id], (err, row) => {
     if (err) return res.status(500).json({ error: 'Erro no banco' });

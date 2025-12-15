@@ -22,7 +22,6 @@
     <section class="login-form">
       <h2>Entrar na sua conta</h2>
 
-      <!-- APENAS 1 FORMULÁRIO -->
       <form id="loginForm">
         <label for="email">E-mail</label>
         <input id="email" type="email" name="email" required>
@@ -60,7 +59,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const result = await res.json();
 
   if (res.ok) {
-    // SALVA TOKEN E USUÁRIO CORRETAMENTE
     localStorage.setItem("token", result.token);
     localStorage.setItem("user", JSON.stringify(result.user));
     localStorage.setItem("tipo", result.user.tipo);

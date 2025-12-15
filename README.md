@@ -184,9 +184,9 @@ DELETE /api/assistances/:id — Excluir assistência
 ## Diagrama de Arquitetura
 
 1.  ┌─────────────────────┐
-2.  │     Frontend        │
-3.  │ HTML / CSS / JS     │
-4.  │ (Browser)           │
+2.  │     Frontend             │
+3.  │    HTML / CSS / JS       │
+4.  │    (Browser)             │
 5.  └─────────┬───────────┘
 6.                   │ HTTP / JSON
 7.                   ▼

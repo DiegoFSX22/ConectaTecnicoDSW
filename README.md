@@ -58,19 +58,20 @@ Antes de executar o projeto, é necessário ter instalado:
 
 ## Estrutura do Projeto
 
-public/
-css/
-styles.css
-index.html
-login.html
-register.html
-dashboard.html
-list.html
-detail.html
-server.js
-conectatecnico.db
-package.json
-README.md
+1.  ├── public/
+2.  │   ├── css/
+3.  │   │   └── styles.css
+4.  │   ├── index.html
+5.  │   ├── login.html
+6.  │   ├── register.html
+7.  │   ├── dashboard.html
+8.  │   ├── list.html
+9.  │   └── detail.html
+10. │
+11. ├── server.js
+12. ├── conectatecnico.db
+13. ├── package.json
+14. └── README.md
 
 ---
 

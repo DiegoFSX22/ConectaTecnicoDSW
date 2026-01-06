@@ -12,6 +12,11 @@ O sistema permite que técnicos criem contas, cadastrem suas assistências e que
 
 ---
 
+### Link Video
+https://drive.google.com/file/d/1QetNmI1F5Ad03WoNUHh4mJI9fLIG2Mv8/view?usp=sharing
+
+---
+
 ## Tecnologias Utilizadas
 
 ### Backend
